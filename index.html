@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0f766e" />
+  <title>OT Case Log</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div><p class="eyebrow">PRIVATE CASE LOG</p><h1>OT Case Log</h1></div>
+    <div class="actions"><button id="newCase">+ New case</button><button class="secondary" id="exportData">Export backup</button><label class="secondary file-label">Restore backup<input id="restoreData" type="file" accept="application/json" /></label></div>
+  </header>
+  <main>
+    <aside>
+      <label class="search">Search cases<input id="search" placeholder="Name, procedure, date" /></label>
+      <label>Filter role<select id="roleFilter"><option value="">All cases</option><option>Independent</option><option>Semi-independent</option><option>Assisted</option></select></label>
+      <label>Filter system<select id="systemFilter"><option value="">All systems</option><option>GIT</option><option>Hepato-biliary</option><option>Head and neck</option><option>Endocrine</option><option>Genito-urinary</option><option>Thoracic</option><option>Soft tissue sarcomas</option><option>Breast</option></select></label>
+      <div id="caseList" aria-live="polite"></div>
+    </aside>
+    <section class="editor">
+      <div class="notice">Records are stored only in this browser. Do not use a shared device. Export an encrypted backup before clearing browser data.</div>
+      <form id="caseForm">
+        <input id="caseId" type="hidden" />
+        <div class="title-row"><h2 id="formTitle">New case</h2><button type="button" class="secondary" id="previewCase" hidden>Preview case</button><button type="button" class="danger" id="deleteCase" hidden>Delete case</button></div>
+        <fieldset><legend>1. Upload case document first — OCR auto-fill</legend>
+          <p class="hint">Upload the OT sheet, admission form, or typed PDF here first. It reads the document and fills Name, Age, Sex, OT date, Procedure, and any labelled sections it finds.</p>
+          <div class="ocr"><input id="ocrFile" type="file" accept="image/*,application/pdf" /><button type="button" id="runOcr">Scan document & auto-fill</button><span id="ocrStatus"></span></div>
+          <label>Extracted notes<textarea id="otNotes" rows="5" placeholder="Type or review the scanned OT notes here"></textarea></label>
+        </fieldset>
+        <fieldset><legend>2. Patient, procedure & operative team</legend><div class="grid three">
+          <label>Your role<select id="role"><option value="">Select</option><option>Assisted</option><option>Semi-independent</option><option>Independent</option></select></label><label>Surgical system<select id="system"><option value="">Select</option><option>GIT</option><option>Hepato-biliary</option><option>Head and neck</option><option>Endocrine</option><option>Genito-urinary</option><option>Thoracic</option><option>Soft tissue sarcomas</option><option>Breast</option></select></label><label>OT date<input id="otDate" type="date" /></label>
+          <label>Patient name<input id="name" required autocomplete="off" /></label><label>Age<input id="age" type="number" min="0" max="130" /></label><label>Sex<select id="sex"><option value="">Select</option><option>Female</option><option>Male</option><option>Other / prefer not to say</option></select></label>
+          <label>Operating surgeon<input id="operatingSurgeon" autocomplete="off" /></label><label>Assistant name(s)<input id="assistantNames" autocomplete="off" /></label><label>Procedure done<input id="procedure" /></label><label class="span2">Diagnosis<input id="diagnosis" autocomplete="off" /></label>
+        </div></fieldset>
+        <fieldset><legend>Clinical record</legend><div class="grid two">
+          <label>Pre-op history<textarea id="preOpHistory" rows="5"></textarea><input class="sectionOcr" data-target="preOpHistory" type="file" accept="image/*,application/pdf" /></label><label>Pre-op imaging<textarea id="preOpImaging" rows="5" placeholder="Findings, modality, date"></textarea><input class="sectionOcr" data-target="preOpImaging" type="file" accept="image/*,application/pdf" /></label>
+          <label>Intra-op notes<textarea id="intraOpNotes" rows="5" placeholder="Operative findings, steps, implants, blood loss"></textarea><input class="sectionOcr" data-target="intraOpNotes" type="file" accept="image/*,application/pdf" /></label><label>Post-op histopathology<textarea id="histopath" rows="5"></textarea><input class="sectionOcr" data-target="histopath" type="file" accept="image/*,application/pdf" /></label>
+          <label>Follow-up outcomes<textarea id="followUp" rows="5" placeholder="Outcome, follow-up date, plan"></textarea><input class="sectionOcr" data-target="followUp" type="file" accept="image/*,application/pdf" /></label>
+        </div></fieldset>
+        <fieldset><legend>Complications</legend><div class="grid two">
+          <label>Complication?<select id="complication"><option value="No">No</option><option value="Yes">Yes</option></select></label>
+          <label class="span2" id="complicationWrap" hidden>Complication and how it was managed<textarea id="complicationDetails" rows="4" placeholder="Describe the event, action taken, and outcome"></textarea></label>
+        </div></fieldset>
+        <fieldset><legend>Clinical photos</legend><p class="hint">Avoid face/identifying images unless you have documented consent and institutional approval.</p><div class="grid two">
+          <label>Pre-op photos<input id="preOpPhotos" type="file" accept="image/*" multiple /></label><label>Intra-op photos<input id="intraOpPhotos" type="file" accept="image/*" multiple /></label>
+          <label>Post-op / follow-up photos<input id="postOpPhotos" type="file" accept="image/*" multiple /></label><label>Photos of documents / labels (OCR)<input id="photoOcr" type="file" accept="image/*" multiple /></label>
+        </div><div id="photos" class="photos"></div></fieldset>
+        <div class="save-row"><span id="saveStatus"></span><button type="submit">Save case</button></div>
+      </form>
+      <section id="previewPanel" class="preview-panel" hidden></section>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+  <script src="app.js?v=5"></script>
+  <script src="fix.js?v=6"></script>
+</body>
+</html>
