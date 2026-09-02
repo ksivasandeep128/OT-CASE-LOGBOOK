@@ -1,0 +1,1 @@
+(()=>{document.addEventListener('click',e=>{const img=e.target.closest('.photo img');if(!img)return;const box=document.createElement('div');box.className='galleryOverlay';box.innerHTML=`<button aria-label="Close">×</button><img src="${img.src}" alt="Clinical photo">`;box.onclick=x=>{if(x.target===box||x.target.tagName==='BUTTON')box.remove()};document.body.append(box)})})();
